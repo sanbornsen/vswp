@@ -84,6 +84,7 @@ function my_action_javascript() {
 	global $wpdb;
 	$images = $wpdb->get_results("SELECT img_url, redirect_url FROM vindowshop");
 ?>
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script type="text/javascript" >
 
 
@@ -126,11 +127,20 @@ if (window.XMLHttpRequest)
   xmlhttp=new XMLHttpRequest();
   }
 else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
 xmlhttp.onreadystatechange=function()
   {
   if (xmlhttp.readyState==4 && xmlhttp.status==200)
     {
-    document.getElementById("vindowshop_result").innerHTML=xmlhttp.responseText;
+    var data = jQuery.parseJSON(xmlhttp.responseText);
+    var new_html = "";
+    for(var i=0;i<data.length;i++){
+    	new_html += "<img style='padding:5px;max-height:150px; max-width:100px' src='http://www.beta.vindowshop.com"+data[i]+"'>";
+    }
+    alert(new_html);
+    document.getElementById("vindowshop_result").innerHTML=new_html;
     }
   }
 xmlhttp.open("POST","http://vindowshop.com:8080/fetchprod",true);
