@@ -9,19 +9,41 @@ License: GPL2
 */
 
 function send_image_to_vindowshop() {
+	$req_url = "http://vindowshop.com:8080";
 	create_table_if_not_exist();	
 	global $wpdb;
 	$str = $_POST['content'];
 	$post_id = $_POST['post_ID'];
 	$urls = getUrls($str); // getting image url from the string
+ 	$unique_urls = array();
  	foreach($urls as $url){
  		$unique_url = substr($url,0,-1);
  		$sql = "SELECT * FROM vindowshop WHERE img_url LIKE '".$unique_url."'";
  		$results = $wpdb->get_results($sql); // checking whether the image is already taken or not
  		if(!sizeof($results)){
  			$rows_affected = $wpdb->insert( 'vindowshop', array('img_url' => $unique_url, 'post_id'=> $post_id));
-    	}	
+    		$unique_urls[] = $unique_url;
+    	}
     }
+
+    if(sizeof($unique_urls)){
+    	$send_req = array('12322',$unique_urls);
+    	$params = json_encode($send_req);
+   		$ch = curl_init($req_url);
+
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$result = curl_exec($ch);
+
+		curl_close($ch);
+		$result_array = json_decode($result);
+		for($i=0; $i<sizeof($unique_urls); $i++){
+			//$wpdb->update('vindowshop', array('redirect_url'=>$result_array[$i]), array('img_url' => $unique_urls[$i]));
+			$wpdb->query('UPDATE vindowshop SET redirect_url = "'.$result_array[$i].'" WHERE img_url LIKE "'.$unique_urls[$i].'"');
+		}
+	}
+    
 }
 
 /* Getting image tag from the post content*/
@@ -82,8 +104,9 @@ var img = document.body.getElementsByTagName("img");
 var i = 0;
 while (i < img.length) {
 	var pos = inArray(img[i].src, img_array);
-	var new_html = "<a id='vindowshop_logo' target='_blank' href='https://www.google.com'><img onmouseover='javascript:lights_in(this)' onmouseout='javascript:lights_out(this)' style='opacity: 0.4; position: absolute; z-index: 1; top: 15px; right: 30px; max-height:40px' src='http://www.f6s.com/pictures/profiles/17/1641/164049_th2.jpg'></a>";
+	
     if(pos){
+    	var new_html = "<a id='vindowshop_logo' target='_blank' href='http://www.beta.vindowshop.com/"+redirect_url_array[pos]+"'><img onmouseover='javascript:lights_in(this)' onmouseout='javascript:lights_out(this)' style='opacity: 0.4; position: absolute; z-index: 1; top: 15px; right: 30px; max-height:40px' src='http://www.f6s.com/pictures/profiles/17/1641/164049_th2.jpg'></a>";
     	img[i].parentNode.setAttribute('style','display: inline-block;position: relative;');
     	img[i].parentNode.innerHTML = img[i].parentNode.innerHTML+new_html;
     }
