@@ -26,21 +26,22 @@ function send_image_to_vindowshop() {
     	}
     }
 
+    // Sending request to the vindowshop server
     if(sizeof($unique_urls)){
-    	$send_req = array('12322',$unique_urls);
+    	$send_req = array('1234	',$unique_urls);
     	$params = json_encode($send_req);
    		$ch = curl_init($req_url);
 
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		$result = curl_exec($ch);
+		$result = curl_exec($ch); // recieving the result from the server
 
 		curl_close($ch);
 		$result_array = json_decode($result);
 		for($i=0; $i<sizeof($unique_urls); $i++){
-			//$wpdb->update('vindowshop', array('redirect_url'=>$result_array[$i]), array('img_url' => $unique_urls[$i]));
-			$wpdb->query('UPDATE vindowshop SET redirect_url = "'.$result_array[$i].'" WHERE img_url LIKE "'.$unique_urls[$i].'"');
+			// Updating the redirect url for corresponding image
+			$wpdb->query('UPDATE vindowshop SET redirect_url = "'.$result_array[$i].'" WHERE img_url LIKE "'.$unique_urls[$i].'"'); 
 		}
 	}
     
@@ -106,12 +107,37 @@ while (i < img.length) {
 	var pos = inArray(img[i].src, img_array);
 	
     if(pos){
-    	var new_html = "<a id='vindowshop_logo' target='_blank' href='http://www.beta.vindowshop.com/"+redirect_url_array[pos]+"'><img onmouseover='javascript:lights_in(this)' onmouseout='javascript:lights_out(this)' style='opacity: 0.4; position: absolute; z-index: 1; top: 15px; right: 30px; max-height:40px' src='http://www.f6s.com/pictures/profiles/17/1641/164049_th2.jpg'></a>";
+    	var new_html = "<a href='javascript:void(0)'><img onmouseover='javascript:lights_in(this)' onclick='javascript:select_gender(this,\""+img[i].src+"\")' onmouseout='javascript:lights_out(this)' style='opacity: 0.4; position: absolute; z-index: 1; top: 15px; right: 30px; max-height:40px' src='http://www.f6s.com/pictures/profiles/17/1641/164049_th2.jpg'></a>";
     	img[i].parentNode.setAttribute('style','display: inline-block;position: relative;');
     	img[i].parentNode.innerHTML = img[i].parentNode.innerHTML+new_html;
     }
     i++;
 }
+
+function select_gender(el,link){
+	var prev_html = el.parentNode.innerHTML;
+	var new_html = "<a onclick='javascript:get_result(this.innerHTML,\""+link+"\")'>Men Topwear</a>&nbsp&nbsp<a onclick='javascript:get_result(this.innerHTML,\""+link+"\")'>Women Topwear</a>";
+	el.parentNode.innerHTML = prev_html + "<br>" + new_html + "<div id='vindowshop_result'></div>";
+}
+
+function get_result(val,link){
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    document.getElementById("vindowshop_result").innerHTML=xmlhttp.responseText;
+    }
+  }
+xmlhttp.open("POST","http://vindowshop.com:8080/fetchprod",true);
+xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+xmlhttp.send('["'+link+'","'+val+'",600,600,0,0,100,100]');
+}
+
 
 function lights_in(el){
 	el.setAttribute('style','opacity:1.0;position: absolute; z-index: 1; top: 15px; right: 30px; max-height:40px');
