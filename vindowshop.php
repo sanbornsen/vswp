@@ -84,6 +84,7 @@ function my_action_javascript() {
 	global $wpdb;
 	$images = $wpdb->get_results("SELECT img_url, redirect_url FROM vindowshop");
 ?>
+
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script type="text/javascript" >
 
@@ -117,7 +118,7 @@ while (i < img.length) {
 
 function select_gender(el,link){
 	var prev_html = el.parentNode.innerHTML;
-	var new_html = "<a onclick='javascript:get_result(this.innerHTML,\""+link+"\")'>Men Topwear</a>&nbsp&nbsp<a onclick='javascript:get_result(this.innerHTML,\""+link+"\")'>Women Topwear</a>";
+	var new_html = "<a class='btn' onclick='javascript:get_result(this.innerHTML,\""+link+"\")'>Men Topwear</a>&nbsp&nbsp<a class='btn' onclick='javascript:get_result(this.innerHTML,\""+link+"\")'>Women Topwear</a>";
 	el.parentNode.innerHTML = prev_html + "<br>" + new_html + "<div id='vindowshop_result'></div>";
 }
 
@@ -167,5 +168,7 @@ function inArray(needle, haystack) {
 </script>
 <?php
 }
+wp_register_style( 'namespace', plugin_dir_url(__FILE__).'VindowShop.css' ); 
+wp_enqueue_style('namespace');
 add_action( 'wp_footer', 'my_action_javascript' );
 ?>	
