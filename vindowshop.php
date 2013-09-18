@@ -139,7 +139,6 @@ xmlhttp.onreadystatechange=function()
     for(var i=0;i<data.length;i++){
     	new_html += "<img style='padding:5px;max-height:150px; max-width:100px' src='http://www.beta.vindowshop.com"+data[i]+"'>";
     }
-    alert(new_html);
     document.getElementById("vindowshop_result").innerHTML=new_html;
     }
   }
