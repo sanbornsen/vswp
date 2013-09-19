@@ -84,8 +84,13 @@ function my_action_javascript() {
 	global $wpdb;
 	$images = $wpdb->get_results("SELECT img_url, redirect_url FROM vindowshop");
 ?>
+<!-- Modal content goes here -->
+<div id="basic-modal-content"></div>
 
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script type='text/javascript' src='<?=plugin_dir_url(__FILE__)?>js/jquery.js'></script>
+<script type='text/javascript' src='<?=plugin_dir_url(__FILE__)?>js/jquery.simplemodal.js'></script>
+<script type='text/javascript' src='<?=plugin_dir_url(__FILE__)?>js/basic.js'></script>
 <script type="text/javascript" >
 
 
@@ -117,9 +122,12 @@ while (i < img.length) {
 }
 
 function select_gender(el,link){
-	var prev_html = el.parentNode.innerHTML;
-	var new_html = "<a class='btn' onclick='javascript:get_result(this.innerHTML,\""+link+"\")'>Men Topwear</a>&nbsp&nbsp<a class='btn' onclick='javascript:get_result(this.innerHTML,\""+link+"\")'>Women Topwear</a>";
-	el.parentNode.innerHTML = prev_html + "<br>" + new_html + "<div id='vindowshop_result'></div>";
+	//var prev_html = el.parentNode.innerHTML;
+	var new_html = "<a class='btn' onclick='java
+	<!-- Modal content goes here -->script:get_result(this.innerHTML,\""+link+"\")'>Men Topwear</a>&nbsp&nbsp<a class='btn' onclick='javascript:get_result(this.innerHTML,\""+link+"\")'>Women Topwear</a>";
+	document.getElementById('basic-modal
+		-content').innerHTML =  new_html;
+	open_modal();
 }
 
 function get_result(val,link){
@@ -136,11 +144,14 @@ xmlhttp.onreadystatechange=function()
   if (xmlhttp.readyState==4 && xmlhttp.status==200)
     {
     var data = jQuery.parseJSON(xmlhttp.responseText);
-    var new_html = "";
+    var new_html = "<div style='height:300px;overflow:auto'>";
     for(var i=0;i<data.length;i++){
     	new_html += "<img style='padding:5px;max-height:150px; max-width:100px' src='http://www.beta.vindowshop.com"+data[i]+"'>";
     }
-    document.getElementById("vindowshop_result").innerHTML=new_html;
+    new_html += '</div>';
+    <!-- Modal content goes here -->
+    document.getElementById("basic-modal
+    	-content").innerHTML=new_html;
     }
   }
 xmlhttp.open("POST","http://vindowshop.com:8080/fetchprod",true);
@@ -168,7 +179,9 @@ function inArray(needle, haystack) {
 </script>
 <?php
 }
-wp_register_style( 'namespace', plugin_dir_url(__FILE__).'VindowShop.css' ); 
+wp_register_style( 'namespace', plugin_dir_url(__FILE__).'css/VindowShop.css' ); 
 wp_enqueue_style('namespace');
+wp_register_style( 'modal', plugin_dir_url(__FILE__).'css/basic.css' ); 
+wp_enqueue_style('modal');
 add_action( 'wp_footer', 'my_action_javascript' );
 ?>	
