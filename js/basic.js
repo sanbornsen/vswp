@@ -25,7 +25,6 @@ jQuery(function ($) {
 });
 */
 function open_modal(){
-	alert('yaa');
 	$("#basic-modal-content").modal({onClose: function (dialog) {
 			$("#basic-modal-content").html = '';
 			$.modal.close();	
