@@ -33,16 +33,15 @@ xmlhttp.onreadystatechange=function()
   if (xmlhttp.readyState==4 && xmlhttp.status==200)
     {
     var data = jQuery.parseJSON(xmlhttp.responseText);
-    var new_html = "<div style='height:300px;overflow:auto'>";
+    var new_html = "<!-- Modal content goes here --><div style='height:300px;overflow:auto'>";
     for(var i=0;i<data.length;i++){
     	new_html += "<img style='padding:5px;max-height:150px; max-width:100px' src='http://www.beta.vindowshop.com"+data[i]+"'>";
     }
     new_html += '</div>';
-    <!-- Modal content goes here -->
     document.getElementById("basic-modal-content").innerHTML=new_html;
     }
   }
-xmlhttp.open("POST","http://vindowshop.com:8080/fetchprod",true);
+xmlhttp.open("POST","http://vindowshop.com:9999/fetchprod",true);
 xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 xmlhttp.send('["'+link+'","'+val+'",600,600,0,0,100,100]');
 }
