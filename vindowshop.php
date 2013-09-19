@@ -86,7 +86,6 @@ function my_action_javascript() {
 ?>
 <!-- Modal content goes here -->
 <div id="basic-modal-content"></div>
-
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script type='text/javascript' src='<?=plugin_dir_url(__FILE__)?>js/jquery.js'></script>
 <script type='text/javascript' src='<?=plugin_dir_url(__FILE__)?>js/jquery.simplemodal.js'></script>
@@ -123,10 +122,8 @@ while (i < img.length) {
 
 function select_gender(el,link){
 	//var prev_html = el.parentNode.innerHTML;
-	var new_html = "<a class='btn' onclick='java
-	<!-- Modal content goes here -->script:get_result(this.innerHTML,\""+link+"\")'>Men Topwear</a>&nbsp&nbsp<a class='btn' onclick='javascript:get_result(this.innerHTML,\""+link+"\")'>Women Topwear</a>";
-	document.getElementById('basic-modal
-		-content').innerHTML =  new_html;
+	var new_html = "<a class='btn' onclick='javascript:get_result(this.innerHTML,\""+link+"\")'>Men Topwear</a>&nbsp&nbsp<a class='btn' onclick='javascript:get_result(this.innerHTML,\""+link+"\")'>Women Topwear</a>";
+	document.getElementById('basic-modal-content').innerHTML =  new_html;
 	open_modal();
 }
 
@@ -150,8 +147,7 @@ xmlhttp.onreadystatechange=function()
     }
     new_html += '</div>';
     <!-- Modal content goes here -->
-    document.getElementById("basic-modal
-    	-content").innerHTML=new_html;
+    document.getElementById("basic-modal-content").innerHTML=new_html;
     }
   }
 xmlhttp.open("POST","http://vindowshop.com:8080/fetchprod",true);
