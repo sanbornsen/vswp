@@ -39,6 +39,14 @@ function send_image_to_vindowshop() {
 
 		curl_close($ch);
 		$result_array = json_decode($result);
+		/*
+		This portion will be changed when I'll recieving a subset of the urls I am sending at $result. It'll be something like
+
+		for($i = 0; $i<sizeof($result_array); $i++){
+			$wpdb->query('UPDATE vindowshop SET status = 1 WHERE img_url LIKE "'.$result_array[$i].'"');
+		} 
+		*/
+
 		for($i=0; $i<sizeof($unique_urls); $i++){
 			// Updating the redirect url for corresponding image
 			$wpdb->query('UPDATE vindowshop SET redirect_url = "'.$result_array[$i].'" WHERE img_url LIKE "'.$unique_urls[$i].'"'); 
@@ -82,7 +90,10 @@ add_action( 'save_post', 'send_image_to_vindowshop' );
 
 function my_action_javascript() {
 	global $wpdb;
-	$images = $wpdb->get_results("SELECT img_url, redirect_url FROM vindowshop");
+	/* Lateron this code will be 
+		$images = $wpdb->get_results("SELECT img_url FROM vindowshop WHERE status = 1");
+	*/
+	$images = $wpdb->get_results("SELECT img_url,redirect_url FROM vindowshop");
 ?>
 <!-- Modal content goes here -->
 <div id="basic-modal-content"></div>
@@ -98,12 +109,12 @@ var img_array = [<?php
 						echo "'x'";
 					?>];
 
-var redirect_url_array = [<?php 
+/*var redirect_url_array = [<?php 
 						foreach($images as $image){
 							echo "'".$image->redirect_url."',";
 						}
 						echo "'x'";
-					?>];
+					?>];*/
 var img = document.body.getElementsByTagName("img");
 var i = 0;
 while (i < img.length) {
